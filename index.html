@@ -1,0 +1,137 @@
+<!DOCTYPE html>
+<html lang="ar" dir="rtl">
+<head>
+  <meta charset="UTF-8">
+  <meta name="viewport" content="width=device-width, initial-scale=1.0">
+  <title>📿 استوريهات دينية</title>
+  <style>
+    * {
+      margin: 0;
+      padding: 0;
+      box-sizing: border-box;
+    }
+    body {
+      font-family: "Cairo", sans-serif;
+      color: #fff;
+      text-align: center;
+      padding: 20px;
+      position: relative;
+      overflow-x: hidden;
+    }
+    video.bg-video {
+      position: fixed;
+      top: 0;
+      left: 0;
+      width: 100%;
+      height: 100%;
+      object-fit: cover;
+      z-index: -1;
+      filter: brightness(0.5);
+    }
+    h1 {
+      font-size: 34px;
+      margin-bottom: 20px;
+      font-weight: bold;
+      color: #e0f7df;
+      text-shadow: 0px 0px 15px #00ff88;
+    }
+    .btn {
+      display: block;
+      margin: 10px auto;
+      padding: 15px;
+      width: 80%;
+      border: none;
+      border-radius: 12px;
+      font-size: 20px;
+      font-weight: bold;
+      cursor: pointer;
+      background: linear-gradient(135deg, #006400, #00a86b);
+      color: #fff;
+      box-shadow: 0px 0px 10px #00ff88;
+      transition: 0.3s;
+    }
+    .btn:hover {
+      background: linear-gradient(135deg, #00ff88, #006400);
+      color: #111;
+    }
+    .content {
+      margin-top: 20px;
+      padding: 15px;
+      border: 2px solid #00ff88;
+      border-radius: 12px;
+      min-height: 120px;
+      font-size: 20px;
+      line-height: 1.8;
+      background: rgba(0, 0, 0, 0.5);
+    }
+    .download-btn {
+      margin-top: 15px;
+      padding: 10px 20px;
+      font-size: 18px;
+      border: none;
+      border-radius: 8px;
+      cursor: pointer;
+      background: #ffd700;
+      color: #111;
+      font-weight: bold;
+      display: none;
+    }
+    footer {
+      margin-top: 30px;
+      font-size: 14px;
+      color: #ddd;
+      text-shadow: 0px 0px 5px #000;
+    }
+  </style>
+</head>
+<body>
+  <!-- خلفية الفيديو -->
+  <video class="bg-video" autoplay muted loop>
+    <source src="eer.mp4" type="video/mp4">
+    متصفحك لا يدعم تشغيل الفيديو.
+  </video>
+
+  <h1>✨ استوريهات وأحاديث نبوية ✨</h1>
+
+  <button class="btn" onclick="getContent( أحاديث قصيرة )">📖 أحاديث</button>
+  <button class="btn" onclick="getContent( استوري ديني قصير )">🕌 استوريهات (حالة)</button>
+  <button class="btn" onclick="getContent( حكمة أو موعظة قصيرة )">💡 حكم ومواعظ</button>
+
+  <div class="content" id="contentBox">
+    ⏳ برجاء اختيار زرار لعرض المحتوى...
+  </div>
+  <button class="download-btn" id="downloadBtn" onclick="downloadAsImage()">💾 تحميل كصورة</button>
+
+  <footer>
+    جميع الحقوق محفوظة © د/محمد الصنقري 2025
+  </footer>
+
+  <script src="https://cdn.jsdelivr.net/npm/html2canvas@1.4.1/dist/html2canvas.min.js"></script>
+  <script>
+    async function getContent(type) {
+      document.getElementById("contentBox").innerText = "⏳ جاري جلب المحتوى...";
+      document.getElementById("downloadBtn").style.display = "none";
+
+      try {
+        let res = await fetch(`https://alakreb.vercel.app/api/ai/gpt?q=${encodeURIComponent("اكتب " + type)}`);
+        let data = await res.json();
+        document.getElementById("contentBox").innerText = data.message || "❌ لم يتم العثور على محتوى.";
+        document.getElementById("downloadBtn").style.display = "inline-block";
+      } catch (err) {
+        document.getElementById("contentBox").innerText = "⚠️ حدث خطأ أثناء جلب البيانات.";
+      }
+    }
+
+    function downloadAsImage() {
+      let content = document.getElementById("contentBox");
+      html2canvas(content).then(canvas => {
+        let link = document.createElement("a");
+        link.download = "story.png";
+        link.href = canvas.toDataURL();
+        link.click();
+      });
+    }
+  </script>
+</body>
+  </html>
+  
